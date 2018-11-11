@@ -1,6 +1,7 @@
 import win32evtlog
 import win32api
 import win32evtlogutil
+from datetime import datetime
 from lastExe import lastExe
 
 '''
@@ -33,7 +34,7 @@ def getLastExecuted(computer, exeList):
                                 if exeList[j].path in recordLines[i]:
                                     if not exeList[j].checked:  # record list is sorted newest to oldest, so we check to see if the processes last launch time has already been recorded
                                         exeList[j].checked = True
-                                        exeList[j].lastLaunch = object.TimeGenerated.Format()   # returns a String of the timestamp of the record
+                                        exeList[j].lastLaunch = timeslation(object.TimeGenerated.Format())   # returns a String of the timestamp of the record
                                     break
                             break
 
@@ -43,6 +44,43 @@ def getLastExecuted(computer, exeList):
 
     win32evtlog.CloseEventLog(eventLog)
     return exeList
+
+
+def timeslation(timestr):
+    # translates record timestamp string into a datetime format
+    month = timestr[4:7]
+    if month == "Jan":
+        month = '01'
+    elif month == "Feb":
+        month = '02'
+    elif month == "Mar":
+        month = '03'
+    elif month == "Apr":
+        month = '04'
+    elif month == "May":
+        month = '05'
+    elif month == "Jun":
+        month = '06'
+    elif month == "Jul":
+        month = '07'
+    elif month == "Aug":
+        month = '08'
+    elif month == "Sep":
+        month = '09'
+    elif month == "Oct":
+        month = '10'
+    elif month == "Nov":
+        month = '11'
+    elif month == "Dec":
+        month = '12'
+    else:
+        return datetime.toordinal(1)
+
+    date = timestr[8:10]
+    time = timestr[11:19]
+    year = timestr[20:24]
+
+    return datetime.strptime(year + '-' + month + '-' + date + ' ' + time, '%Y-%m-%d %H:%M:%S')
 
 
 def test():
