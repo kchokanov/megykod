@@ -18,3 +18,10 @@ def genlist(pathList):
     for i in range(len(pathList)):
         arr.append(lastExe(pathList[i]))
     return arr
+
+def test():
+    t = lastExe("python.exe")
+    print(t.toString())
+
+if __name__ == '__main__':
+    test()
