@@ -1,6 +1,7 @@
 import win32evtlog
 import win32api
 import win32evtlogutil
+from lastExe import lastExe
 
 '''
 Written by Kal Chokanov
@@ -29,8 +30,11 @@ def getLastExecuted(computer, exeList):
                     for i in range(len(recordLines)):
                         if "New Process Name:" in recordLines[i]:
                             for j in range(len(exeList)):
-                                if exeList[j] in recordLines[i]:
-                                    print("caught " + exeList[j] + "executed at: " + str(object.TimeGenerated.Format()))
+                                if exeList[j].path in recordLines[i]:
+                                    if not exeList[j].checked:  # record list is sorted newest to oldest, so we check to see if the processes last launch time has already been recorded
+                                        exeList[j].checked = True
+                                        exeList[j].lastLaunch = object.TimeGenerated.Format()   # returns a String of the timestamp of the record
+                                    break
                             break
 
             except UnicodeError:
@@ -38,6 +42,7 @@ def getLastExecuted(computer, exeList):
                 print(repr(record))
 
     win32evtlog.CloseEventLog(eventLog)
+    return exeList
 
 
 def test():
@@ -46,9 +51,13 @@ def test():
         print("This sample only runs on NT")
         return
 
-    exelist = ["python.exe", "conhost.exe"]
+    exelist = []
+    exelist.append(lastExe('python.exe'))
+    exelist.append(lastExe('conhost.exe'))
     computer = None     # None refers back to localhost
-    getLastExecuted(computer, exelist)
+    exelist = getLastExecuted(computer, exelist)
+    for exe in exelist:
+        print(exe.toString())
 
 
 if __name__ == '__main__':
