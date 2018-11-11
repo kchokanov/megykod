@@ -1,0 +1,12 @@
+
+ to start the service execute the following in an admin command prompt:
+    "python example.py install"
+    "python example.py start"
+ to stop and remove the service:
+    "python example.py stop"
+    "python example.py remove"
+ there is also a debug that will run the service from the terminal after it has been installed:
+    "python example.py debug"
+
+ in case of error 1053 when starting the service add python to your SYSTEM path variable
+

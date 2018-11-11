@@ -1,13 +1,15 @@
 import time
 import ctypes
+import random
+from pathlib import Path
 import servicemanager
 import sys
 import win32serviceutil
 from SMWinservice import SMWinservice
 
 class PythonCornerExample(SMWinservice):
-    _svc_name_ = "PythonCornerExample"
-    _svc_display_name_ = "Python Corner's Winservice Example"
+    _svc_name_ = "Example"
+    _svc_display_name_ = "Example"
     _svc_description_ = "That's a great winservice! :)"
 
     def start(self):
@@ -18,9 +20,10 @@ class PythonCornerExample(SMWinservice):
 
     def main(self):
         while self.isrunning:
-            MessageBox = ctypes.windll.user32.MessageBoxW
-            MessageBox(None, 'poop', 'Window title', 0)
-            time.sleep(50)
+            random.seed()
+            x = random.randint(1, 1000000)
+            Path(f'c:\\{x}.txt').touch()
+            time.sleep(5)
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
