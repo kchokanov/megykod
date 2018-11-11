@@ -1,13 +1,12 @@
-import win32evtlog
 import win32api
-import win32con
-import win32security
-import win32evtlogutil
 import time
 import servicemanager
 import sys
 import win32serviceutil
+from datetime import datetime
 from SMWinservice import SMWinservice
+from checkLog import getLastExecuted
+from lastExe import genlist
 
 class PythonCornerExample(SMWinservice):
     _svc_name_ = "MegyKod"
@@ -22,15 +21,17 @@ class PythonCornerExample(SMWinservice):
 
     def main(self):
         while self.isrunning:
-            logType = "Application"
-            ph = win32api.GetCurrentProcess()
-            th = win32security.OpenProcessToken(ph, win32con.TOKEN_READ)
-            my_sid = win32security.GetTokenInformation(th, win32security.TokenUser)[0]
-
-            win32evtlogutil.ReportEvent(logType, 2,
-                                        strings=["The message text for event 2", "Another insert"],
-                                        data="Raw\0Data".encode("ascii"), sid=my_sid)
-            time.sleep(5)
+            with open('D:\Docs\Code\Python\MegyKod\Paths', 'r') as pool:    #replace with file containing paths to IDE executables
+                paths = pool.readlines()
+            pathlist = genlist(paths)
+            pathlist = getLastExecuted(None, pathlist)
+            do = False
+            for item in pathlist:
+                if ((datetime.now() - item.lastLaunch).days > 0):
+                    do = not do
+            if do:
+                win32api.MessageBox(0, 'You haven\'t written code in 24 hours Kal!', 'MegyKod', 0x00001000)
+            time.sleep(86400)
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

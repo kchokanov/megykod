@@ -1,12 +1,16 @@
+For this to work you must enable "Audit Process Creation" in your group policy settings
+You must create a file with the paths to all of your IDE/programming tool executable paths and chage the path in line 24 of megyKodService.py
+Note: currently only works properly in debug mode. Windows services cannot create message windows :(
 
  to start the service execute the following in an admin command prompt:
-    "python example.py install"
-    "python example.py start"
+    "python megyKodServicee.py install"
+    "python megyKodServicee.py start"
  to stop and remove the service:
-    "python example.py stop"
-    "python example.py remove"
+    "python megyKodServicee.py stop"
+    "python megyKodServicee.py remove"
  there is also a debug that will run the service from the terminal after it has been installed:
-    "python example.py debug"
+    "python megyKodServicee.py debug"
 
  in case of error 1053 when starting the service add python to your SYSTEM path variable
+
 
